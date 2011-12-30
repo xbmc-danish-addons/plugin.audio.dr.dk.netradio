@@ -1,5 +1,5 @@
-[B]Version 2.0.0 - 2011-12-29[/B]
-- Updated for Eden
+[B]Version 2.0.0 - 2011-12-30[/B]
+- Updated for Eden incl. new graphics
 - New channel logos
 - Improved error handling with option for the user to submit exceptions/bugs
 

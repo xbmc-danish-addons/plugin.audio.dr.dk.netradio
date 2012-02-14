@@ -1,5 +1,5 @@
 #
-#      Copyright (C) 2011 Tommy Winther
+#      Copyright (C) 2012 Tommy Winther
 #      http://tommy.winther.nu
 #
 #  This Program is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with XBMC; see the file COPYING.  If not, write to
+#  along with this Program; see the file LICENSE.txt. If not, write to
 #  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 #  http://www.gnu.org/copyleft/gpl.html
 #
@@ -21,52 +21,108 @@ import os
 import sys
 import simplejson
 import urllib2
-import buggalo
+import urlparse
 
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
 import xbmcvfs
 
+import channels
+import buggalo
+
 CHANNELS_URL = 'http://www.dr.dk/LiveNetRadio/datafeed/channels.js.drxml'
 
-def showChannels():
-    u = urllib2.urlopen(CHANNELS_URL)
-    data = u.read()
-    u.close()
+class DkNetradio(object):
 
-    channels = simplejson.loads(data[39:-3])
-    for channel in channels:
-        logoImage = os.path.join(LOGO_PATH, channel['source_url'] + '.png')
-        if xbmcvfs.exists(logoImage):
-            item = xbmcgui.ListItem(channel['title'], iconImage = logoImage)
-        else:
-            item = xbmcgui.ListItem(channel['title'], iconImage = ICON)
-
-        item.setProperty('IsPlayable', 'true')
+    def showOverview(self):
+        item = xbmcgui.ListItem(ADDON.getLocalizedString(100), iconImage = ICON)
         item.setProperty('Fanart_Image', FANART)
-        item.setInfo(type = 'audio', infoLabels = {
-                'title' : channel['title']
-        })
+        xbmcplugin.addDirectoryItem(HANDLE, PATH + '?show=dr', item, True)
 
-        if type(channel['mediaFile']) is list:
-            url = channel['mediaFile'][0]
-        else:
-            url = channel['mediaFile']
-        xbmcplugin.addDirectoryItem(HANDLE, url + ' live=1', item)
+        item = xbmcgui.ListItem(ADDON.getLocalizedString(101), iconImage = ICON_OTHER)
+        item.setProperty('Fanart_Image', FANART)
+        xbmcplugin.addDirectoryItem(HANDLE, PATH + '?show=other', item, True)
 
-    xbmcplugin.endOfDirectory(HANDLE)
+        xbmcplugin.endOfDirectory(HANDLE)
+
+    def showDRChannels(self):
+        try:
+            u = urllib2.urlopen(CHANNELS_URL)
+            data = u.read()
+            u.close()
+        except Exception, ex:
+            self.showError(str(ex))
+            return
+
+        channelList = simplejson.loads(data[39:-3])
+        for channel in channelList:
+            logoImage = os.path.join(LOGO_PATH, channel['source_url'] + '.png')
+            if xbmcvfs.exists(logoImage):
+                item = xbmcgui.ListItem(channel['title'], iconImage = logoImage)
+            else:
+                item = xbmcgui.ListItem(channel['title'], iconImage = ICON)
+
+            item.setProperty('IsPlayable', 'true')
+            item.setProperty('Fanart_Image', FANART)
+            item.setInfo(type = 'audio', infoLabels = {
+                    'title' : channel['title']
+            })
+
+            if type(channel['mediaFile']) is list:
+                url = channel['mediaFile'][0]
+            else:
+                url = channel['mediaFile']
+            xbmcplugin.addDirectoryItem(HANDLE, url + ' live=1', item)
+
+        xbmcplugin.endOfDirectory(HANDLE)
+
+
+    def showOtherChannels(self):
+        for channel in channels.CHANNELS:
+            logoImage = os.path.join(LOGO_PATH, str(channel.id) + '.png')
+            if xbmcvfs.exists(logoImage):
+                item = xbmcgui.ListItem(channel.name, iconImage = logoImage)
+            else:
+                item = xbmcgui.ListItem(channel.name, iconImage = ICON)
+
+            item.setProperty('IsPlayable', 'true')
+            item.setProperty('Fanart_Image', FANART)
+            item.setInfo(type = 'audio', infoLabels = {
+                'title' : channel.name
+            })
+            xbmcplugin.addDirectoryItem(HANDLE, channel.url, item)
+
+        xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL)
+        xbmcplugin.endOfDirectory(HANDLE)
+
+
+    def showError(self, message):
+        heading = buggalo.getRandomHeading()
+        line1 = ADDON.getLocalizedString(900)
+        line2 = ADDON.getLocalizedString(901)
+        xbmcgui.Dialog().ok(heading, line1, line2, message)
 
 if __name__ == '__main__':
     ADDON = xbmcaddon.Addon()
+    PATH = sys.argv[0]
     HANDLE = int(sys.argv[1])
+    PARAMS = urlparse.parse_qs(sys.argv[2][1:])
 
     LOGO_PATH = os.path.join(ADDON.getAddonInfo('path'), 'resources', 'logos')
     ICON = os.path.join(ADDON.getAddonInfo('path'), 'icon.png')
+    ICON_OTHER = os.path.join(ADDON.getAddonInfo('path'), 'icon-other.png')
     FANART = os.path.join(ADDON.getAddonInfo('path'), 'fanart.jpg')
 
     try:
-        showChannels()
+        netradio = DkNetradio()
+        if PARAMS.has_key('show') and PARAMS['show'][0] == 'dr':
+            netradio.showDRChannels()
+        elif PARAMS.has_key('show') and PARAMS['show'][0] == 'other':
+            netradio.showOtherChannels()
+        else:
+            netradio.showOverview()
+
     except Exception:
         buggalo.onExceptionRaised()
 

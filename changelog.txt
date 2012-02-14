@@ -1,3 +1,8 @@
+[B]Version 2.1.0 - 2012-02-14[/B]
+- Added 'Other Danish stations' category with 10 stations
+  Post suggestions for other stations on my blog: http://tommy.winther.nu
+- Introduced usage of script.module.buggalo
+
 [B]Version 2.0.0 - 2011-12-30[/B]
 - Updated for Eden incl. new graphics
 - New channel logos

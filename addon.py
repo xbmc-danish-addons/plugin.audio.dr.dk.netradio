@@ -114,6 +114,7 @@ if __name__ == '__main__':
     ICON_OTHER = os.path.join(ADDON.getAddonInfo('path'), 'icon-other.png')
     FANART = os.path.join(ADDON.getAddonInfo('path'), 'fanart.jpg')
 
+    buggalo.SUBMIT_URL = 'http://tommy.winther.nu/exception/submit.php'
     try:
         netradio = DkNetradio()
         if PARAMS.has_key('show') and PARAMS['show'][0] == 'dr':

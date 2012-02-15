@@ -1,3 +1,6 @@
+[B]Version 2.1.1 - 2012-02-15[/B]
+- Setup buggalo url
+
 [B]Version 2.1.0 - 2012-02-14[/B]
 - Added 'Other Danish stations' category with 10 stations
   Post suggestions for other stations on my blog: http://tommy.winther.nu

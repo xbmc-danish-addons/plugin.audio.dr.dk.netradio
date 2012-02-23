@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
         id="plugin.audio.dr.dk.netradio"
-        version="2.1.1"
-        name="DR.dk Netradio"
+        version="2.1.2"
+        name="Danish Netradio"
         provider-name="stemann [jesper@sait.dk], twinther [tommy@winther.nu]">
     <requires>
         <import addon="xbmc.python" version="2.0"/>

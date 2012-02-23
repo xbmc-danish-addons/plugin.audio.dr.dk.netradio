@@ -1,3 +1,10 @@
+[B]Version 2.1.2 - 2012-02-23[/B]
+- Renamed addon to Danish Netradio
+- Added more channels
+- Updated graphics
+  Icon from: http://www.iconarchive.com/show/cartoon-icons-by-robsonbillponte/Radio-icon.html
+  Fanart from: http://www.htbackdrops.com/v2/displayimage.php?album=9&pid=2031
+
 [B]Version 2.1.1 - 2012-02-15[/B]
 - Setup buggalo url
 

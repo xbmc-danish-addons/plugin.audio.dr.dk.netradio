@@ -40,7 +40,7 @@ class DkNetradio(object):
         item.setProperty('Fanart_Image', FANART)
         xbmcplugin.addDirectoryItem(HANDLE, PATH + '?show=dr', item, True)
 
-        item = xbmcgui.ListItem(ADDON.getLocalizedString(101), iconImage = ICON_OTHER)
+        item = xbmcgui.ListItem(ADDON.getLocalizedString(101), iconImage = ICON)
         item.setProperty('Fanart_Image', FANART)
         xbmcplugin.addDirectoryItem(HANDLE, PATH + '?show=other', item, True)
 
@@ -65,7 +65,7 @@ class DkNetradio(object):
 
             item.setProperty('IsPlayable', 'true')
             item.setProperty('Fanart_Image', FANART)
-            item.setInfo(type = 'audio', infoLabels = {
+            item.setInfo(type = 'music', infoLabels = {
                     'title' : channel['title']
             })
 
@@ -88,14 +88,30 @@ class DkNetradio(object):
 
             item.setProperty('IsPlayable', 'true')
             item.setProperty('Fanart_Image', FANART)
-            item.setInfo(type = 'audio', infoLabels = {
+            item.setInfo(type = 'music', infoLabels = {
                 'title' : channel.name
             })
-            xbmcplugin.addDirectoryItem(HANDLE, channel.url, item)
+            xbmcplugin.addDirectoryItem(HANDLE, PATH + '?playOther=%d' % channel.id, item)
 
         xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL)
         xbmcplugin.endOfDirectory(HANDLE)
 
+    def playOther(self, idx):
+        channel = None
+        for c in channels.CHANNELS:
+            if c.id == int(idx):
+                channel = c
+                break
+
+        if channel is None:
+            return
+
+        logoImage = os.path.join(LOGO_PATH, str(channel.id) + '.png')
+        item = xbmcgui.ListItem(path = channel.url, thumbnailImage = logoImage)
+        item.setInfo(type = 'music', infoLabels = {
+            'title' : channel.name
+        })
+        xbmcplugin.setResolvedUrl(HANDLE, True, item)
 
     def showError(self, message):
         heading = buggalo.getRandomHeading()
@@ -111,7 +127,6 @@ if __name__ == '__main__':
 
     LOGO_PATH = os.path.join(ADDON.getAddonInfo('path'), 'resources', 'logos')
     ICON = os.path.join(ADDON.getAddonInfo('path'), 'icon.png')
-    ICON_OTHER = os.path.join(ADDON.getAddonInfo('path'), 'icon-other.png')
     FANART = os.path.join(ADDON.getAddonInfo('path'), 'fanart.jpg')
 
     buggalo.SUBMIT_URL = 'http://tommy.winther.nu/exception/submit.php'
@@ -121,6 +136,8 @@ if __name__ == '__main__':
             netradio.showDRChannels()
         elif PARAMS.has_key('show') and PARAMS['show'][0] == 'other':
             netradio.showOtherChannels()
+        elif PARAMS.has_key('playOther'):
+            netradio.playOther(PARAMS['playOther'][0])
         else:
             netradio.showOverview()
 

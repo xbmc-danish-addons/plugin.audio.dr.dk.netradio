@@ -31,7 +31,7 @@ import xbmcvfs
 import channels
 import buggalo
 
-CHANNELS_URL = 'http://www.dr.dk/LiveNetRadio/datafeed/channels.js.drxml'
+CHANNELS_URL = 'http://www.dr.dk/radio/channels/channels.json.drxml'
 
 class DkNetradio(object):
 
@@ -49,13 +49,12 @@ class DkNetradio(object):
     def showDRChannels(self):
         try:
             u = urllib2.urlopen(CHANNELS_URL)
-            data = u.read()
+            channelList = simplejson.loads(u.read())
             u.close()
         except Exception, ex:
             self.showError(str(ex))
             return
 
-        channelList = simplejson.loads(data[39:-3])
         for channel in channelList:
             logoImage = os.path.join(LOGO_PATH, channel['source_url'] + '.png')
             if xbmcvfs.exists(logoImage):

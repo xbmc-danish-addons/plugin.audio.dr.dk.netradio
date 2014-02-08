@@ -31,15 +31,15 @@ import xbmcvfs
 import channels
 import buggalo
 
-CHANNELS_URL = 'http://www.dr.dk/radio/external/channels?mediaType=radio&Title=$OrderBy(asc)'
+CHANNELS_URL = 'http://www.dr.dk/radio/external/channels?mediaType=radio'
 
 
 def showOverview():
-    item = xbmcgui.ListItem(ADDON.getLocalizedString(100), iconImage=ICON)
+    item = xbmcgui.ListItem(ADDON.getLocalizedString(30100), iconImage=ICON)
     item.setProperty('Fanart_Image', FANART)
     xbmcplugin.addDirectoryItem(HANDLE, PATH + '?show=dr', item, True)
 
-    item = xbmcgui.ListItem(ADDON.getLocalizedString(101), iconImage=ICON)
+    item = xbmcgui.ListItem(ADDON.getLocalizedString(30101), iconImage=ICON)
     item.setProperty('Fanart_Image', FANART)
     xbmcplugin.addDirectoryItem(HANDLE, PATH + '?show=other', item, True)
 
@@ -126,8 +126,8 @@ def playOther(idx):
 
 def showError(message):
     heading = buggalo.getRandomHeading()
-    line1 = ADDON.getLocalizedString(900)
-    line2 = ADDON.getLocalizedString(901)
+    line1 = ADDON.getLocalizedString(30900)
+    line2 = ADDON.getLocalizedString(30901)
     xbmcgui.Dialog().ok(heading, line1, line2, message)
 
 

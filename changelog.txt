@@ -1,3 +1,6 @@
+[B]Version 2.1.7 - 2014-03-xx[/B]
+- Added myRock
+
 [B]Version 2.1.6 - 2014-03-20[/B]
 - Switched DR channels to icecast streams to receive metadata about songs played
 

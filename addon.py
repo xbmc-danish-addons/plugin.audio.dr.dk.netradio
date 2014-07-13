@@ -31,7 +31,7 @@ import xbmcvfs
 import channels
 import buggalo
 
-CHANNELS_URL = 'http://www.dr.dk/radio/external/channels?mediaType=radio'
+CHANNELS_URL = 'http://www.dr.dk/mu-online/api/1.0/channel/all-active-dr-radio-channels'
 
 
 def showOverview():
@@ -55,7 +55,7 @@ def showDRChannels():
         showError(str(ex))
         return
 
-    for channel in channelList['Data']:
+    for channel in channelList:
         title = channel['Title']
         if title[0:3] == 'DR ':
             title = title[3:]

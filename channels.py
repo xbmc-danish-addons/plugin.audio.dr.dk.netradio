@@ -53,4 +53,3 @@ Channel(21, 'Globus Guld', 'shout://media.wlmm.dk:80/guld')
 Channel(22, 'myRock', 'shout://stream.myrock.fm/myrock128')
 Channel(23, 'Radio Globus','shout://media.wlmm.dk:80/globus2')
 Channel(24, 'Radio Viborg','shout://host1.leanstream-hd.com/VBRGFM?radioviborg_web')
-
